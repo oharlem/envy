@@ -1,0 +1,26 @@
+[package]
+name = "varz"
+version = "0.1.0"
+edition = "2024"
+# Minimum supported Rust version (MSRV). Keep CI and this value aligned.
+rust-version = "1.94"
+description = "A simple CLI for managing environment variables — search, set, and persist without session restarts"
+license = "MIT"
+repository = "https://github.com/oharlem/varz"
+keywords = ["env", "environment", "cli", "shell"]
+categories = ["command-line-utilities"]
+documentation = "https://docs.rs/varz"
+
+[[bin]]
+name = "varz"
+path = "src/main.rs"
+
+[dependencies]
+
+[dev-dependencies]
+tempfile = "3"
+
+[profile.release]
+opt-level = "z"   # optimize for size
+lto = true
+strip = true
