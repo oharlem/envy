@@ -434,11 +434,13 @@ fn shell_quote(value: &str) -> String {
 }
 
 /// Basic check: env var names must be alphanumeric + underscore, not start with digit
+/// as per https://pubs.opengroup.org/onlinepubs/9799919799/basedefs/V1_chap08.html
 fn is_valid_key(key: &str) -> bool {
     let mut bytes = key.bytes();
     match bytes.next() {
         None => return false,
         Some(b) if b.is_ascii_digit() => return false,
+        Some(b) if !(b.is_ascii_alphabetic() || b == b'_') => return false,
         _ => {}
     }
     bytes.all(|b| b.is_ascii_alphanumeric() || b == b'_')
@@ -559,6 +561,11 @@ mod tests {
     #[test]
     fn invalid_key_unicode_digit() {
         assert!(!is_valid_key("VAR٣"));
+    }
+
+    #[test]
+    fn invalid_key_non_alphabetic_non_underscore_prefix() {
+        assert!(!is_valid_key("%ABC"));
     }
 
     // ── shell_quote ──────────────────────────────────────────────────────────
